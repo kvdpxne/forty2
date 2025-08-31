@@ -1,7 +1,7 @@
 [versions]
-champeau-jmh = "0.7.2"
+champeau-jmh = "0.7.3"
 jmh = "1.37"
-jupiter = "5.10.2"
+jupiter = "5.13.4"
 
 [plugins]
 champeau-jmh = { id = "me.champeau.jmh", version.ref = "champeau-jmh" }
