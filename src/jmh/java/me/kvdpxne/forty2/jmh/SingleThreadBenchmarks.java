@@ -1,7 +1,6 @@
 package me.kvdpxne.forty2.jmh;
 
 import java.util.concurrent.TimeUnit;
-import me.kvdpxne.forty2.Forty2;
 import me.kvdpxne.forty2.NanoId;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -35,11 +34,6 @@ public class SingleThreadBenchmarks {
   @Benchmark
   public String url_friendly_secure() {
     return NanoId.urlFriendlySecure(this.size);
-  }
-
-  @Benchmark
-  public String previous_version_alphanumeric() {
-    return Forty2.alphanumeric(this.size);
   }
 
   @Benchmark
