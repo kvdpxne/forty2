@@ -8,6 +8,9 @@ It stands out for its **superior performance**, particularly in concurrent scena
 demonstrated by benchmarks against other Java NanoID libraries (`jnanoid-enhanced`, `nanoid-kotlin`)
 and `java.util.UUID`. This makes it an excellent choice for high-throughput server applications.
 
+**Compatibility**: `forty2` is compatible with Java 8 and newer versions, including the latest LTS (
+Java 21 at the time of writing).
+
 Key features and benefits include:
 
 - 🚀 **High Performance & Multithreading**: Engineered for speed and efficiency, utilizing
