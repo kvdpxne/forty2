@@ -6,64 +6,50 @@ plugins {
 }
 
 group = "me.kvdpxne"
-version = "0.1.0"
+version = "0.2.0"
 
-def ENABLE_PREVIEW = "--enable-preview"
-def targetJavaVersion = 21
-java {
-  def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+def targetJavaVersion = 8
+def javaVersion = JavaVersion.toVersion(targetJavaVersion)
 
-  sourceCompatibility = javaVersion
-  targetCompatibility = javaVersion
+dependencies {
+  testImplementation(libraries.bundles.jupiter)
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-  if (JavaVersion.current() < javaVersion) {
-    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+  if (javaVersion.isCompatibleWith(JavaVersion.VERSION_17)) {
+    jmh(libraries.bundles.jmh)
+
+    jmhImplementation("co.wosher:jnanoid-enhanced:main-SNAPSHOT")
+    //
+    //
+    jmhImplementation("io.viascom.nanoid:nanoid:1.0.1")
   }
 }
 
-dependencies {
-  jmh(libraries.bundles.jmh)
-  testImplementation(libraries.jupiter)
+java {
+  if (JavaVersion.current() < javaVersion) {
+    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+  }
 
-  // Alternatives to compare
-  jmhImplementation("co.wosher:jnanoid-enhanced:main-SNAPSHOT")
-  jmhImplementation("io.viascom.nanoid:nanoid:1.0.1")
-}
-
-jmh {
-  jvmArgs.add(ENABLE_PREVIEW)
-}
-
-jmhRunBytecodeGenerator {
-  jvmArgs.add(ENABLE_PREVIEW)
+  sourceCompatibility = javaVersion
+  targetCompatibility = javaVersion
 }
 
 tasks.withType(JavaCompile).configureEach {
   if (10 <= targetJavaVersion || JavaVersion.current().isJava10Compatible()) {
     options.release.set(targetJavaVersion)
   }
-
-  options.compilerArgs += [
-    // Enable preview features for the Java compiler.
-    ENABLE_PREVIEW
-  ]
-}
-
-tasks.withType(JavaExec).configureEach {
-  jvmArgs.add(ENABLE_PREVIEW)
 }
 
 tasks.withType(Test).configureEach {
   useJUnitPlatform()
-  jvmArgs += ENABLE_PREVIEW
 }
 
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      groupId = "me.kvdpxne"
-      artifactId = "forty2"
-      version = "0.1.0"
+      artifactId = rootProject.name
+      groupId = project.group
+      version = project.version
 
       from components.java
     }
