@@ -1,5 +1,7 @@
 package me.kvdpxne.forty2.converter;
 
+import me.kvdpxne.forty2.validator.AsciiValidator;
+
 /**
  * Utility class for converting character arrays ({@code char[]}) to byte arrays ({@code byte[]}),
  * optimized for ASCII characters.
@@ -32,20 +34,23 @@ public final class CharacterArrayConverter {
   /**
    * Converts an array of characters to an array of bytes.
    * <p>
-   * This method is optimized for ASCII characters (0x00-0x7F). It performs a direct cast from
-   * {@code char} to {@code byte}. If any character in the input array has a value greater than
-   * 0x7F, it is considered non-ASCII and an {@link IllegalArgumentException} is thrown. This check
-   * ensures data integrity and prevents silent corruption if the input does not conform to the
-   * expected ASCII standard.
+   * This method is optimized for printable ASCII characters (0x21-0x7E). It performs a direct cast
+   * from {@code char} to {@code byte}. If any character in the input array is not a printable ASCII
+   * character (i.e., outside the range {@value AsciiValidator#MIN_PRINTABLE_ASCII} to
+   * {@value AsciiValidator#MAX_PRINTABLE_ASCII}), an {@link IllegalArgumentException} is thrown.
+   * This validation ensures data integrity and prevents silent corruption if the input does not
+   * conform to the expected printable ASCII standard.
    * </p>
    *
    * @param characters The array of characters to be converted. Must not be {@code null}. All
-   *                   characters must be within the 7-bit ASCII range (0x00-0x7F).
+   *                   characters must be within the printable ASCII range (0x21-0x7E).
    * @return A new {@code byte[]} array where each element is the ASCII byte representation of the
    * corresponding character in the input array.
    * @throws NullPointerException     if {@code characters} is {@code null}.
-   * @throws IllegalArgumentException if any character in the {@code characters} array has a value
-   *                                  greater than 0x7F (i.e., is not a 7-bit ASCII character).
+   * @throws IllegalArgumentException if any character in the {@code characters} array is not a
+   *                                  printable ASCII character (i.e., outside the range
+   *                                  {@value AsciiValidator#MIN_PRINTABLE_ASCII} to
+   *                                  {@value AsciiValidator#MAX_PRINTABLE_ASCII}).
    * @since 1.0.0
    */
   public static byte[] toBytes(
@@ -56,16 +61,7 @@ public final class CharacterArrayConverter {
     final byte[] bytes = new byte[characters.length];
     for (int i = 0; i < characters.length; i++) {
       final char character = characters[i];
-      // Basic ASCII check (0x00 - 0x7F)
-      if (0x7F < character) { // Simplified check for ASCII range
-        throw new IllegalArgumentException(
-          String.format(
-            "Non-ASCII character detected: '%c' (0x%04X). " +
-              "Only ASCII characters (0x00-0x7F) are supported.",
-            character, (int) character
-          )
-        );
-      }
+      AsciiValidator.validatePrintableCharacter(character);
       bytes[i] = (byte) character;
     }
     return bytes;

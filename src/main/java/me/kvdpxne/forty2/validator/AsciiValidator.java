@@ -106,17 +106,7 @@ public final class AsciiValidator {
     final boolean[] duplications = new boolean[MAX_PRINTABLE_ASCII - MIN_PRINTABLE_ASCII + 1];
     for (final char character : characters) {
       // Check if character is within the defined printable ASCII range.
-      if (MIN_PRINTABLE_ASCII > character || MAX_PRINTABLE_ASCII < character) {
-        throw new IllegalArgumentException(
-          String.format(
-            "Character '%c' (0x%04X) is not a printable ASCII character. " +
-              "Only characters in range 0x%02X ('%c') to 0x%02X ('%c') are allowed.",
-            character, (int) character,
-            MIN_PRINTABLE_ASCII, (char) MIN_PRINTABLE_ASCII,
-            MAX_PRINTABLE_ASCII, (char) MAX_PRINTABLE_ASCII
-          )
-        );
-      }
+      validatePrintableCharacter(character);
 
       // Calculate the index for the duplications array using an offset.
       final int index = character - MIN_PRINTABLE_ASCII;
@@ -130,7 +120,36 @@ public final class AsciiValidator {
         );
       }
       // Mark the character as seen.
-      duplications[character] = true;
+      duplications[index] = true;
+    }
+  }
+
+  /**
+   * Checks whether the given character is a printable ASCII character within the allowed range.
+   * <p>
+   * A character is considered valid if its numeric value lies between {@value #MIN_PRINTABLE_ASCII}
+   * ('!') and {@value #MAX_PRINTABLE_ASCII} ('~'), inclusive. Control characters, spaces, and
+   * extended ASCII characters are rejected.
+   * </p>
+   *
+   * @param character the character to be validated
+   * @throws IllegalArgumentException if the character is not within the valid printable ASCII
+   *                                  range
+   * @since 0.2.0
+   */
+  public static void validatePrintableCharacter(
+    final char character
+  ) {
+    if (MIN_PRINTABLE_ASCII > character || MAX_PRINTABLE_ASCII < character) {
+      throw new IllegalArgumentException(
+        String.format(
+          "Character '%c' (0x%04X) is not a printable ASCII character. " +
+            "Only characters in range 0x%02X ('%c') to 0x%02X ('%c') are allowed.",
+          character, (int) character,
+          MIN_PRINTABLE_ASCII, (char) MIN_PRINTABLE_ASCII,
+          MAX_PRINTABLE_ASCII, (char) MAX_PRINTABLE_ASCII
+        )
+      );
     }
   }
 

@@ -424,7 +424,7 @@ public final class NanoId {
    * @since 0.2.0
    */
   public static String hexUppercase() {
-    return hexLowercase(DEFAULT_SIZE);
+    return hexUppercase(DEFAULT_SIZE);
   }
 
   /**

@@ -43,7 +43,7 @@ final class NanoIdHelper {
    * @param length The length of the character alphabet used for generation. Must be greater than
    *               0.
    * @return The calculated mask value.
-   * @throws IllegalArgumentException if {@code alphabetLength} is not positive.
+   * @throws IllegalArgumentException if {@code length} is not positive.
    * @since 0.2.0
    */
   static int calculateMask(
@@ -76,7 +76,7 @@ final class NanoIdHelper {
    * @param length The length of the character alphabet used for generation. Must be greater than
    *               0.
    * @return The calculated step size (number of bytes).
-   * @throws IllegalArgumentException if {@code alphabetLength} is not positive.
+   * @throws IllegalArgumentException if {@code length} is not positive.
    * @since 0.2.0
    */
   static int calculateStep(
